@@ -12,6 +12,7 @@ This script assumes a few things;
 5. No username & Password is put in as None not ""
 """
 
+from __future__ import print_function
 import json
 import shutil
 import urllib2
@@ -20,9 +21,10 @@ import os
 import re
 
 
-DESTINATION_DIRECTORY = "/Users/bunnyman/Dropbox/Shared/Torrent Out/"
-USER = "admin"
-PASSWD = "bunny"
+DESTINATION_DIRECTORY = "{}/Dropbox/Shared/Torrent Out/".format(os.environ["HOME"])
+USER = ""
+PASSWD = ""
+
 
 class TransmissionRequestWrapper(object):
     """
@@ -30,6 +32,7 @@ class TransmissionRequestWrapper(object):
     You only need to instantiate one per server and use json_request to send
      commands
     """
+
     def __init__(self, username=None, password=None,
                  host="localhost", port="9091", path="transmission/rpc/"):
         """
@@ -46,7 +49,7 @@ class TransmissionRequestWrapper(object):
         self._port = port
         self._path = path
         self._sessionID = self.get_session_id()
-        self._url = "http://%s:%s/%s" % (self._host, self._port, self._path)
+        self._url = "http://{0:s}:{1:s}/{2:s}".format(self._host, self._port, self._path)
         if self._noPass is False:
             authHandler = urllib2.HTTPPasswordMgrWithDefaultRealm()
             authHandler.add_password(None, self._url, self._username, self._password)
@@ -61,8 +64,9 @@ class TransmissionRequestWrapper(object):
         if self._noPass:
             url = self._url
         else:
-            url = "http://%s:%s@%s:%s/%s" % (self._username, self._password,
-                                             self._host, self._port, self._path)
+            url = "http://{0:s}:{1:s}@{2:s}:{3:s}/{4:s}".format(
+                self._username, self._password, self._host, self._port, self._path
+            )
         req = urllib.urlopen(url)
         rawData = req.read()
         pattern = re.compile('X-Transmission-Session-Id: ([a-zA-Z0-9]+)')
@@ -106,7 +110,7 @@ def main():
         if not torrent["isFinished"]:
             continue
         if not torrent["haveValid"] == torrent["totalSize"]:
-            print "Torrent %s was finished but valid does not match restarting" % torrent["name"]
+            print("{0:s} was finished but may not be valid, validating".format(torrent["name"]))
             verifyRequest = {
                 "method": "torrent-verify",
                 "arguments": {
@@ -114,8 +118,7 @@ def main():
                 }
             }
             reply = connection.json_request(verifyRequest)
-            print "Torrent %s verifying: %s" % (
-                torrent["name"], reply["result"])
+            print("{0:s} verify results: {1:s}".format(torrent["name"], reply["result"]))
             continue
 
         print "Torrent %s finished" % (torrent["name"])
@@ -132,8 +135,7 @@ def main():
             }
         }
         status = connection.json_request(removeRequest)
-        print "%s moved and deleted: %s" % (torrent["name"], status["result"])
-        print "\n"
+        print("{0:s} moved and deleted: {1:s}\n\n".format(torrent["name"], status["result"]))
 
 
 if __name__ == '__main__':
