@@ -121,11 +121,17 @@ def main():
             print("{0:s} verify results: {1:s}".format(torrent["name"], reply["result"]))
             continue
 
-        print "Torrent %s finished" % (torrent["name"])
-        shutil.copytree(
-            os.path.join(torrent["downloadDir"], torrent["name"]),
-            os.path.join(DESTINATION_DIRECTORY, torrent["name"])
-            )
+        print("Torrent {0:s} finished".format(torrent["name"]))
+        currentLocation = os.path.join(torrent["downloadDir"], torrent["name"])
+        newLocation = os.path.join(DESTINATION_DIRECTORY, torrent["name"])
+        try:
+            if os.path.isdir(currentLocation):
+                shutil.copytree(currentLocation, newLocation)
+            else:
+                shutil.copyfile(currentLocation, newLocation)
+        except shutil.Error as e:
+            print("{} unable to copy because \"{}\"".format(e.filename, e.message))
+            continue
 
         removeRequest = {
             "method": "torrent-remove",
