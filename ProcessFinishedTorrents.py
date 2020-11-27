@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Created by tBunnyMan on 2012-03-28.
-Copyright (c) 2012 Bunni.biz. All rights reserved.
-
 This script assumes a few things;
 1. it is running on the same box as transmission
 2. Set as script-torrent-done-filename OR cron it, it doesn't require any vars
