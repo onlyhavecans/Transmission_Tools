@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 BLOCKLIST_DIR="$HOME/.config/transmission-daemon/blocklists"
+if [[ -d "$HOME/Library/Application Support/transmission-daemo/blocklists" ]]; then
+  BLOCKLIST_DIR="$HOME/Library/Application Support/transmission-daemon/blocklists"
+fi
+
 CONFIG="$HOME/.config/blocklists.conf"
 
 ## Put Overrides for the above in this file
