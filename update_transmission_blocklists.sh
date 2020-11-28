@@ -15,8 +15,8 @@ fi
 
 cd "$BLOCKLIST_DIR" || exit 1
 
-curl -L \
-	http://list.iblocklist.com/?list=bt_level[1-3] \
+curl -L --silent --show-error \
+	https://list.iblocklist.com/?list=bt_level[1-3] \
 	-o "bt_level#1.gz"
 
 gunzip -f ./*.gz
