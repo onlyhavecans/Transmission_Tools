@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 BLOCKLIST_DIR="$HOME/.config/transmission-daemon/blocklists"
-if [[ -d "$HOME/Library/Application Support/transmission-daemo/blocklists" ]]; then
-  BLOCKLIST_DIR="$HOME/Library/Application Support/transmission-daemon/blocklists"
+
+if [[ -d "/usr/local/var/transmission/blocklists" ]]; then
+  BLOCKLIST_DIR="/usr/local/var/transmission/blocklists"
 fi
 
 CONFIG="$HOME/.config/blocklists.conf"
